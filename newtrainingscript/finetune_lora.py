@@ -120,6 +120,39 @@ def _infer_target_modules(model: Any) -> List[str]:
     return out or ["q_proj", "v_proj"]
 
 
+def _make_sft_collator_with_token_type_ids(tokenizer: Any, max_seq_length: int) -> Any:
+    """
+    Data collator for SFT that adds token_type_ids (e.g. for Gemma 3), which
+    some models require when training. Uses same causal LM labels as default SFT.
+    """
+    import torch  # type: ignore[import-untyped]
+
+    pad_token_id = getattr(tokenizer, "pad_token_id", None) or getattr(
+        tokenizer, "eos_token_id", 0
+    )
+
+    def _collate(features: List[Dict[str, Any]]) -> Dict[str, Any]:
+        texts = [f.get("text", "") or "" for f in features]
+        batch = tokenizer(
+            texts,
+            padding=True,
+            truncation=True,
+            max_length=max_seq_length,
+            return_tensors="pt",
+            return_attention_mask=True,
+        )
+        input_ids = batch["input_ids"]
+        attention_mask = batch.get("attention_mask", input_ids.ne(pad_token_id).long())
+        labels = input_ids.clone()
+        labels[attention_mask == 0] = -100
+        batch["labels"] = labels
+        # Required by Gemma 3 (and some other models) when training.
+        batch["token_type_ids"] = torch.zeros_like(input_ids, dtype=torch.long)
+        return batch
+
+    return _collate
+
+
 def main() -> None:
     p = argparse.ArgumentParser(
         description=(
@@ -316,6 +349,10 @@ def main() -> None:
         max_seq_length=args.max_seq_len,
         args=training_args,
         packing=False,
+        # Gemma 3 (and some other models) require token_type_ids when training.
+        data_collator=_make_sft_collator_with_token_type_ids(
+            tokenizer, args.max_seq_len
+        ),
     )
     try:
         sft_params = inspect.signature(SFTTrainer.__init__).parameters
