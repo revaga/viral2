@@ -47,3 +47,5 @@ clean/*log*.txt
 clean/*report*.txt
 clean/*analysis*.txt
 clean/*_removed*.csv
+
+data_viral_titles.csv.remaining
