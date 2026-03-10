@@ -1,0 +1,15 @@
+torch
+transformers
+datasets
+accelerate
+peft
+trl
+pandas
+
+# Evaluation
+numpy
+rouge-score
+sentence-transformers
+vaderSentiment
+nltk
+

@@ -1,0 +1,47 @@
+.env
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Model/runs outputs
+runs/
+wandb/
+mlruns/
+
+# Generated training/eval artifacts
+title_sft_*.jsonl
+data/training_data*.json
+data/missing_video_ids*.txt
+
+# Local large datasets (keep scripts, ignore data dumps)
+US_youtube_trending_data.csv
+data_viral_titles.csv
+data_cleaned.csv
+
+# Cleaning pipeline outputs (keep code under clean/, ignore logs/reports)
+clean/*.log
+clean/*log*.txt
+clean/*report*.txt
+clean/*analysis*.txt
+clean/*_removed*.csv
