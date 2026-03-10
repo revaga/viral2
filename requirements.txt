@@ -1,0 +1,8 @@
+# Kaggle dataset loading
+kagglehub[pandas-datasets]>=0.2.0
+pandas>=2.0.0
+
+# Gemini filter script (new SDK)
+google-genai>=1.0.0
+python-dotenv>=1.0.0
+tqdm>=4.65.0
