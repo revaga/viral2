@@ -25,7 +25,7 @@ SYSTEM_PROMPT = """You are an expert YouTube title generator. Your task is to cr
 Guidelines for generating YouTube titles:
 1. Be accurate and truthful - the title must reflect the actual content
 2. Make it compelling and click-worthy while staying honest
-3. Keep titles concise (ideally 50-80 characters, max 100 characters)
+3. Keep titles concise (ideally 30-70 characters, max 100 characters)
 4. Use natural language that viewers would search for
 5. Highlight the most interesting or valuable aspect
 6. Create a curiosity gap without being misleading
