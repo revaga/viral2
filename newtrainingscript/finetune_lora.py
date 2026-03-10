@@ -123,7 +123,9 @@ def _infer_target_modules(model: Any) -> List[str]:
 def _make_sft_collator_with_token_type_ids(tokenizer: Any, max_seq_length: int) -> Any:
     """
     Data collator for SFT that adds token_type_ids (e.g. for Gemma 3), which
-    some models require when training. Uses same causal LM labels as default SFT.
+    some models require when training. Uses right-padding and fixed length so
+    shift_logits / shift_attention_mask shapes stay consistent (avoids IndexError
+    when effective sequence length is 0 or 1).
     """
     import torch  # type: ignore[import-untyped]
 
@@ -133,14 +135,22 @@ def _make_sft_collator_with_token_type_ids(tokenizer: Any, max_seq_length: int) 
 
     def _collate(features: List[Dict[str, Any]]) -> Dict[str, Any]:
         texts = [f.get("text", "") or "" for f in features]
-        batch = tokenizer(
-            texts,
-            padding=True,
-            truncation=True,
-            max_length=max_seq_length,
-            return_tensors="pt",
-            return_attention_mask=True,
-        )
+        # Skip empty texts so we never pass zero-length sequences.
+        texts = [t if t.strip() else " " for t in texts]
+        # Gemma 3 and many models expect right-padding for training; avoid left padding.
+        old_padding_side = getattr(tokenizer, "padding_side", "right")
+        tokenizer.padding_side = "right"
+        try:
+            batch = tokenizer(
+                texts,
+                padding="max_length",
+                truncation=True,
+                max_length=max_seq_length,
+                return_tensors="pt",
+                return_attention_mask=True,
+            )
+        finally:
+            tokenizer.padding_side = old_padding_side
         input_ids = batch["input_ids"]
         attention_mask = batch.get("attention_mask", input_ids.ne(pad_token_id).long())
         labels = input_ids.clone()
