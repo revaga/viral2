@@ -20,6 +20,15 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 
+def _maybe_load_dotenv() -> None:
+    """Load .env so HF_TOKEN (or HUGGING_FACE_HUB_TOKEN) is available for gated models."""
+    try:
+        from dotenv import load_dotenv  # type: ignore[import-untyped]
+        load_dotenv()
+    except ImportError:
+        pass
+
+
 SYSTEM_PROMPT = """You are an expert YouTube title generator. Your task is to create compelling, accurate titles that capture the essence of video content.
 
 Guidelines for generating YouTube titles:
@@ -240,6 +249,8 @@ def main() -> None:
 
     args = p.parse_args()
 
+    _maybe_load_dotenv()
+
     data_path = Path(args.data_jsonl)
     train_ids_path = Path(args.train_ids)
     if not data_path.exists():
@@ -268,7 +279,12 @@ def main() -> None:
     )
     from trl import SFTTrainer  # type: ignore[import-untyped]
 
-    tokenizer = AutoTokenizer.from_pretrained(args.base_model, use_fast=True)
+    hf_token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN") or None
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.base_model,
+        use_fast=True,
+        token=hf_token,
+    )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
@@ -276,6 +292,7 @@ def main() -> None:
         args.base_model,
         torch_dtype="auto",
         device_map="auto",
+        token=hf_token,
     )
 
     if args.gradient_checkpointing:
