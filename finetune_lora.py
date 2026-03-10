@@ -160,14 +160,14 @@ def main() -> None:
         eval_ds = Dataset.from_dict({"text": eval_texts})
 
     # TrainingArguments: keep eval optional; metrics come later from held-out generation.
-    training_args = TrainingArguments(
+    # Transformers has used both `evaluation_strategy` and `eval_strategy` across versions.
+    ta_kwargs = dict(
         output_dir=str(out_dir / "checkpoints"),
         num_train_epochs=args.epochs,
         learning_rate=args.lr,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum,
-        evaluation_strategy="steps" if eval_ds is not None else "no",
         eval_steps=200 if eval_ds is not None else None,
         save_steps=200,
         logging_steps=25,
@@ -178,10 +178,27 @@ def main() -> None:
         report_to=[],
         max_steps=-1,
     )
+    eval_strategy_value = "steps" if eval_ds is not None else "no"
+    try:
+        import inspect
 
-    trainer = SFTTrainer(
+        ta_params = inspect.signature(TrainingArguments.__init__).parameters
+        if "evaluation_strategy" in ta_params:
+            ta_kwargs["evaluation_strategy"] = eval_strategy_value
+        elif "eval_strategy" in ta_params:
+            ta_kwargs["eval_strategy"] = eval_strategy_value
+        else:
+            ta_kwargs["evaluation_strategy"] = eval_strategy_value
+    except Exception:
+        ta_kwargs["evaluation_strategy"] = eval_strategy_value
+
+    training_args = TrainingArguments(**ta_kwargs)
+
+    # TRL's SFTTrainer signature has changed across versions. Build kwargs dynamically.
+    import inspect
+
+    sft_kwargs = dict(
         model=model,
-        tokenizer=tokenizer,
         train_dataset=train_ds,
         eval_dataset=eval_ds,
         dataset_text_field="text",
@@ -189,6 +206,21 @@ def main() -> None:
         args=training_args,
         packing=False,
     )
+    try:
+        sft_params = inspect.signature(SFTTrainer.__init__).parameters
+        if "tokenizer" in sft_params:
+            sft_kwargs["tokenizer"] = tokenizer
+        elif "processing_class" in sft_params:
+            # Newer TRL uses `processing_class` (a tokenizer/processor-like object).
+            sft_kwargs["processing_class"] = tokenizer
+
+        # Drop keys not supported by this TRL version.
+        sft_kwargs = {k: v for k, v in sft_kwargs.items() if k in sft_params}
+    except Exception:
+        # Best-effort fallback for older versions.
+        sft_kwargs["tokenizer"] = tokenizer
+
+    trainer = SFTTrainer(**sft_kwargs)
 
     trainer.train()
 

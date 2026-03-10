@@ -34,6 +34,8 @@ title_sft_*.jsonl
 data/training_data*.json
 data/missing_video_ids*.txt
 
+data/
+
 # Local large datasets (keep scripts, ignore data dumps)
 US_youtube_trending_data.csv
 data_viral_titles.csv
