@@ -226,12 +226,16 @@ def main() -> None:
     p.add_argument("--stratify-source", action="store_true", help="Stratify split by source (transcript vs description).")
     args = p.parse_args()
 
-    project_root = Path(__file__).resolve().parent
+    # Shared data at project root (data_viral_titles.csv from builddatasets/build_viral_title_dataset.py)
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent
     default_json = project_root / "data" / "training_data.json"
     default_csv = project_root / "data_viral_titles.csv"
 
     if args.input.strip():
         in_path = Path(args.input)
+        if not in_path.is_absolute():
+            in_path = project_root / in_path
     else:
         in_path = default_json if default_json.exists() else default_csv
     if not in_path.exists():

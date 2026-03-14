@@ -33,7 +33,9 @@ import pandas as pd
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+# Shared data at project root: cleandatascripts/clean_data.py writes data_cleaned.csv here
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
 DEFAULT_INPUT = PROJECT_ROOT / "data_cleaned.csv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data_viral_titles.csv"
 
@@ -451,12 +453,14 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    if not args.input.exists():
-        print(f"Error: input file not found: {args.input}", file=sys.stderr)
+    # Resolve relative paths against project root
+    input_path = args.input if args.input.is_absolute() else PROJECT_ROOT / args.input
+    if not input_path.exists():
+        print(f"Error: input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Loading cleaned CSV: {args.input}", file=sys.stderr)
-    df = load_csv(args.input)
+    print(f"Loading cleaned CSV: {input_path}", file=sys.stderr)
+    df = load_csv(input_path)
     print(f"  Loaded {len(df):,} rows", file=sys.stderr)
 
     # 1. Per-channel virality normalization
@@ -519,8 +523,9 @@ def main() -> None:
     else:
         print("Language filter skipped (english-only not set).", file=sys.stderr)
 
-    # Final output
-    args.output = args.output if args.output.is_absolute() else PROJECT_ROOT / args.output
+    # Final output (resolve relative paths against project root)
+    if not args.output.is_absolute():
+        args.output = PROJECT_ROOT / args.output
     df6.to_csv(args.output, index=False, encoding="utf-8")
     print(f"\nSaved viral title dataset to: {args.output}", file=sys.stderr)
     print(f"Total kept rows: {len(df6):,}", file=sys.stderr)

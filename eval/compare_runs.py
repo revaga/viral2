@@ -50,18 +50,24 @@ def main() -> None:
     p.add_argument(
         "--metrics",
         nargs="*",
-        default=["runs/*/metrics_test.json"],
-        help="Glob(s) or explicit paths to metrics JSON files.",
+        default=None,
+        help="Glob(s) or explicit paths to metrics JSON files (default: runs/*/metrics_test.json under project root).",
     )
     args = p.parse_args()
 
+    # Default: look under project root so running from any folder works
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent
+    metrics_globs = args.metrics if args.metrics is not None else [str(project_root / "runs" / "*" / "metrics_test.json")]
+
     paths: List[Path] = []
-    for pat in args.metrics:
+    for pat in metrics_globs:
         expanded = glob.glob(pat)
         if expanded:
             paths.extend(Path(x) for x in expanded)
         else:
-            paths.append(Path(pat))
+            p = Path(pat)
+            paths.append(p)
 
     paths = [p for p in paths if p.exists()]
     paths.sort()

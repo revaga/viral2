@@ -19,9 +19,10 @@ import pandas as pd
 import kagglehub
 
 # Install: pip install kagglehub[pandas-datasets]
-# Output CSV path (used by filter_videos_gemini.py as default input)
+# Output CSV at project root so cleandatascripts/clean_data.py can use it
 SCRIPT_DIR = Path(__file__).resolve().parent
-ORIGINAL_CSV = SCRIPT_DIR / "US_youtube_trending_data.csv"
+PROJECT_ROOT = SCRIPT_DIR.parent
+ORIGINAL_CSV = PROJECT_ROOT / "US_youtube_trending_data.csv"
 
 # Download dataset (Kaggle stores as ZIP)
 dataset_path = kagglehub.dataset_download(

@@ -13,8 +13,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+# Ensure viral_title_metrics can be imported when run from project root (e.g. python eval/evaluate_run.py)
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
 
 
 def _load_preds(path: Path) -> Tuple[List[str], List[str]]:

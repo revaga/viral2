@@ -246,6 +246,8 @@ def main() -> None:
 
     if args.input.strip():
         in_path = Path(args.input)
+        if not in_path.is_absolute():
+            in_path = project_root / in_path
     else:
         in_path = default_json if default_json.exists() else default_csv
     if not in_path.exists():

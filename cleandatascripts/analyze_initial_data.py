@@ -19,7 +19,7 @@ import pandas as pd
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-# This script is in clean/, but the raw CSV lives at project root.
+# Script lives in cleandatascripts/; raw CSV lives at project root.
 CLEAN_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CLEAN_DIR.parent
 DEFAULT_CSV = PROJECT_ROOT / "US_youtube_trending_data.csv"
