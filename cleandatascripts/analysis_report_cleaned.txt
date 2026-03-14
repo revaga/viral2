@@ -1,0 +1,85 @@
+============================================================
+INITIAL CSV DATA ANALYSIS (US YouTube Trending)
+============================================================
+
+--- Shape & structure ---
+Rows: 255,402, Columns: 16
+Columns: ['video_id', 'title', 'publishedAt', 'channelId', 'channelTitle', 'categoryId', 'trending_date', 'tags', 'view_count', 'likes', 'dislikes', 'comment_count', 'thumbnail_link', 'comments_disabled', 'ratings_disabled', 'description']
+
+--- Missing values ---
+  description: 4,532 (1.77%)
+
+--- Numeric summary (view_count, likes, dislikes, comment_count) ---
+         view_count        likes   dislikes  comment_count
+count  2.554020e+05    255402.00  255402.00      255402.00
+mean   2.607826e+06    126756.11    1128.18        9300.71
+std    9.706210e+06    434588.53    8165.65       65211.21
+min    0.000000e+00         0.00       0.00           0.00
+25%    4.589922e+05     18068.00       0.00        1255.00
+50%    8.959170e+05     40342.00       0.00        2697.00
+75%    1.996467e+06     97784.50     458.00        6257.00
+max    1.407644e+09  15735533.00  879354.00     6065230.00
+
+--- Totals ---
+  view_count: 666,043,896,985
+  likes: 32,373,763,581
+  dislikes: 288,139,605
+  comment_count: 2,375,419,148
+
+--- Engagement rates (mean / median) ---
+  Likes / views:     0.053033 / 0.047743
+  Comments / views: 0.004203 / 0.003046
+
+--- Title length (chars) ---
+  Mean: 50.5, Median: 47.0
+  Min: 1, Max: 220
+
+--- Publish date range ---
+  From: 2020-08-03 21:51:14+00:00
+  To:   2024-04-14 10:00:53+00:00
+  Count by year: {2020: 27251, 2021: 70632, 2022: 69779, 2023: 68607, 2024: 19133}
+
+--- Trending date range ---
+  From: 2020-08-12 00:00:00+00:00
+  To:   2024-04-15 00:00:00+00:00
+
+--- Top category IDs (video count) ---
+  24: 51,905
+  20: 51,597
+  10: 42,234
+  17: 23,935
+  22: 22,653
+  23: 12,869
+  1: 10,607
+  25: 9,669
+  28: 7,635
+  26: 7,100
+  27: 6,655
+  2: 5,492
+  19: 1,709
+  15: 1,222
+  29: 120
+
+--- Top 30 channels (video count) ---
+  MrBeast: 1,127
+  Dude Perfect: 699
+  The Game Theorists: 674
+  First We Feast: 640
+  SSundee: 629
+  SSSniperWolf: 599
+  Veritasium: 576
+  Ryan Trahan: 552
+  The Film Theorists: 545
+  Apex Legends: 538
+  MrBeast Gaming: 535
+  SMTOWN: 526
+  The Food Theorists: 516
+  YoungBoy Never Broke Again: 492
+  BANGTANTV: 482
+  Marques Brownlee: 475
+  The Try Guys: 467
+  RDCworld1: 462
+  Kurzgesagt â In a Nutshell: 461
+  NBA on TNT: 456
+
+============================================================

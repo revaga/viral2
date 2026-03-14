@@ -6,3 +6,19 @@ pandas>=2.0.0
 google-genai>=1.0.0
 python-dotenv>=1.0.0
 tqdm>=4.65.0
+
+torch
+transformers
+datasets
+accelerate
+peft
+trl
+pandas
+
+# Evaluation
+numpy
+rouge-score
+sentence-transformers
+vaderSentiment
+nltk
+

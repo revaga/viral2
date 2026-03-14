@@ -70,7 +70,7 @@ def main() -> None:
         finetuned_model.eval()
         finetuned_tokenizer = base_tok
 
-    from eval.viral_title_metrics import compute_metrics
+    from viral_title_metrics import compute_metrics
 
     metrics = compute_metrics(
         references=refs,

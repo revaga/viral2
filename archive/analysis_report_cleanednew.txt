@@ -1,0 +1,83 @@
+============================================================
+INITIAL CSV DATA ANALYSIS (US YouTube Trending)
+============================================================
+
+--- Shape & structure ---
+Rows: 200,373, Columns: 16
+Columns: ['video_id', 'title', 'publishedAt', 'channelId', 'channelTitle', 'categoryId', 'trending_date', 'tags', 'view_count', 'likes', 'dislikes', 'comment_count', 'thumbnail_link', 'comments_disabled', 'ratings_disabled', 'description']
+
+--- Missing values ---
+
+--- Numeric summary (view_count, likes, dislikes, comment_count) ---
+         view_count        likes   dislikes  comment_count
+count  2.003730e+05    200373.00  200373.00      200373.00
+mean   1.945791e+06     95493.43     844.34        6691.66
+std    6.959353e+06    263270.98    4660.78       27414.26
+min    0.000000e+00         0.00       0.00           0.00
+25%    4.425330e+05     18201.00       0.00        1226.00
+50%    8.364210e+05     38875.00       0.00        2543.00
+75%    1.785297e+06     90066.00     417.00        5709.00
+max    1.407644e+09  11192833.00  253992.00     3431431.00
+
+--- Totals ---
+  view_count: 389,883,977,119
+  likes: 19,134,304,219
+  dislikes: 169,182,341
+  comment_count: 1,340,828,402
+
+--- Engagement rates (mean / median) ---
+  Likes / views:     0.053659 / 0.048592
+  Comments / views: 0.004180 / 0.003058
+
+--- Title length (chars) ---
+  Mean: 49.6, Median: 46.0
+  Min: 1, Max: 220
+
+--- Publish date range ---
+  From: 2020-08-03 21:51:14+00:00
+  To:   2024-04-14 10:00:53+00:00
+  Count by year: {2020: 20647, 2021: 55003, 2022: 54506, 2023: 55133, 2024: 15084}
+
+--- Trending date range ---
+  From: 2020-08-12 00:00:00+00:00
+  To:   2024-04-15 00:00:00+00:00
+
+--- Top category IDs (video count) ---
+  20: 48,419
+  24: 44,808
+  17: 21,931
+  22: 20,165
+  10: 16,946
+  23: 11,806
+  1: 8,605
+  28: 7,084
+  26: 6,554
+  27: 5,591
+  2: 5,453
+  19: 1,696
+  15: 1,195
+  29: 120
+
+--- Top 30 channels (video count) ---
+  Dude Perfect: 691
+  The Game Theorists: 674
+  SSSniperWolf: 599
+  SSundee: 578
+  Veritasium: 576
+  The Film Theorists: 545
+  Ryan Trahan: 541
+  Apex Legends: 538
+  MrBeast Gaming: 535
+  The Food Theorists: 516
+  Marques Brownlee: 475
+  RDCworld1: 455
+  Markiplier: 434
+  videogamedunkey: 415
+  Grian: 413
+  Tom Scott: 412
+  Beast Reacts: 397
+  How Ridiculous: 393
+  Practical Engineering: 384
+  LazarBeam: 377
+
+============================================================
