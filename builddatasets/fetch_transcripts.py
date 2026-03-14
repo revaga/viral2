@@ -204,20 +204,27 @@ def main() -> None:
     except Exception:
         pass
 
+    # Defaults under project root (same layout as other builddatasets scripts)
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent
+    default_input = project_root / "data_viral_titles.csv"
+    default_output = project_root / "data" / "training_data.json"
+    default_jsonl = project_root / "data" / "transcript_training_data.jsonl"
+
     p = argparse.ArgumentParser(description="Fetch YouTube transcripts by video_id and write training data (JSON + JSONL).")
     p.add_argument(
         "--input",
-        default=r"c:\Users\revaa\viral2\data_viral_titles.csv",
+        default=str(default_input),
         help="Input CSV containing video_id/title/description (default: project data_viral_titles.csv).",
     )
     p.add_argument(
         "--output",
-        default=r"c:\Users\revaa\viral2\data\training_data.json",
-        help="Output JSON path (default: project data/transcript_data.json).",
+        default=str(default_output),
+        help="Output JSON path (default: project data/training_data.json).",
     )
     p.add_argument(
         "--jsonl-output",
-        default=r"c:\Users\revaa\viral2\data\transcript_training_data.jsonl",
+        default=str(default_jsonl),
         help="Output JSONL path; written incrementally every few transcripts.",
     )
     p.add_argument("--max-workers", type=int, default=10, help="Thread workers (default: 10).")
@@ -260,7 +267,10 @@ def main() -> None:
     )
     args = p.parse_args()
 
+    # Resolve relative paths against project root
     in_path = Path(args.input)
+    if not in_path.is_absolute():
+        in_path = project_root / in_path
     if not in_path.exists():
         raise SystemExit(f"Input not found: {in_path}")
 
@@ -281,7 +291,11 @@ def main() -> None:
         raise SystemExit("--shard-index must be in [0, num_shards)")
 
     out_path = Path(args.output)
+    if not out_path.is_absolute():
+        out_path = project_root / out_path
     jsonl_path = Path(args.jsonl_output)
+    if not jsonl_path.is_absolute():
+        jsonl_path = project_root / jsonl_path
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     jsonl_path.parent.mkdir(parents=True, exist_ok=True)
@@ -376,6 +390,8 @@ def main() -> None:
     # Optionally write retryable failures list for later re-processing.
     if args.failed_ids_output.strip():
         failed_path = Path(args.failed_ids_output)
+        if not failed_path.is_absolute():
+            failed_path = project_root / failed_path
         failed_path.parent.mkdir(parents=True, exist_ok=True)
         with failed_path.open("w", encoding="utf-8") as f:
             json.dump(sorted(set(retryable_failures)), f, indent=2, ensure_ascii=False)

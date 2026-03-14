@@ -6,7 +6,7 @@ This script:
 - Reads a JSON list of retryable failed video_ids (e.g. transcript_failures_debug.json).
 - Looks up those video_ids in the current CSV (data_viral_titles.csv) to get title/description.
 - Skips any IDs already present in an existing output JSONL (so it is safe to re-run).
-- Writes a small temporary CSV and calls `scripts/fetch_transcripts.py` to retry.
+- Writes a small temporary CSV and calls `builddatasets/fetch_transcripts.py` to retry.
 
 Typical usage (defaults are set for your repo paths):
   python scripts/retry_failed_transcripts.py
@@ -149,7 +149,7 @@ def retry_failed(
 
     cmd = [
         "python",
-        "scripts/fetch_transcripts.py",
+        "builddatasets/fetch_transcripts.py",
         "--input",
         str(temp_csv),
         "--jsonl-output",

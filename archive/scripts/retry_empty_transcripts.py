@@ -6,7 +6,7 @@ Workflow:
 1. Scan an existing transcripts JSONL (e.g. transcript_training_data_final.jsonl)
    and select rows with empty full_transcript.
 2. Build a temporary CSV of those video_ids/title/description.
-3. Call scripts/fetch_transcripts.py on that CSV to retry fetching.
+3. Call builddatasets/fetch_transcripts.py on that CSV to retry fetching.
 4. Merge the original JSONL + the retry JSONL, preferring rows with non-empty
    full_transcript (using the same scoring as merge_transcripts_jsonl.py).
 5. Inspect the retry JSON summary and write an unretryable report that records
@@ -91,7 +91,7 @@ def _run_fetch_transcripts(
 
     cmd = [
         "python",
-        "scripts/fetch_transcripts.py",
+        "builddatasets/fetch_transcripts.py",
         "--input",
         str(temp_csv),
         "--jsonl-output",

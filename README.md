@@ -70,11 +70,11 @@ From `data_cleaned.csv`, apply per-channel caps, engagement thresholds (likes/vi
 python builddatasets/build_viral_title_dataset.py
 # Or:
 python builddatasets/build_viral_title_dataset.py --input data_cleaned.csv --output data_viral_titles.csv --english-only --max-per-channel 30
-
+```
 
 ### 4. Fetch transcripts from YouTube
 
-Build a training JSON from a CSV that has `video_id` and `title` (e.g. `data_viral_titles.csv`):
+Build a training JSON from a CSV that has `video_id` and `title` (e.g. `data_viral_titles.csv`). If you hit IP/request blocks, see the [youtube-transcript-api docs](https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception) for workarounds.
 
 ```bash
 python builddatasets/fetch_transcripts.py --input data_viral_titles.csv --output data/training_data.json --max-workers 10
@@ -106,6 +106,16 @@ python trainingscript/finetune_lora.py --data-jsonl title_sft_data.jsonl --train
 
 - Uses the same system prompt as generation (expert YouTube title generator).
 - Adapter is saved under `runs/<run-name>/adapter`.
+
+### 2b. Running a base model
+
+```bash
+python trainingscript/generate_titles_local.py ^
+  --base-model <MODEL_NAME_OR_PATH> ^
+  --data-jsonl <path/to/your_data.jsonl> ^
+  --input-ids <path/to/test_ids.txt> ^
+  --out <path/to/predictions.jsonl>
+```
 
 ### 3. Generate titles on the test set
 

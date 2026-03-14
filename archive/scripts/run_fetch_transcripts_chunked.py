@@ -47,7 +47,7 @@ def _run_shard(
 
     cmd = [
         "python",
-        "scripts/fetch_transcripts.py",
+        "builddatasets/fetch_transcripts.py",
         "--input",
         str(input_path),
         "--jsonl-output",
