@@ -49,3 +49,4 @@ clean/*analysis*.txt
 clean/*_removed*.csv
 
 data_viral_titles.csv.remaining
+cleandatascripts/channels_removed.csv
